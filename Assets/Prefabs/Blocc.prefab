@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6790179498520841669}
   - component: {fileID: -6819377126625453583}
   - component: {fileID: 4855774388069693511}
+  - component: {fileID: 8966793715446837365}
   m_Layer: 0
   m_Name: Blocc
   m_TagString: Untagged
@@ -184,3 +185,31 @@ MonoBehaviour:
   stopThreshold: 0.1
   maxDragSpeed: 15
   releaseDrag: 2
+--- !u!114 &8966793715446837365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082611735034150018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd4d8223653176449ea494e5bfaaa9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerStats
+  towerName: 
+  element: 0
+  nature: 0
+  level: 1
+  currentXP: 0
+  xpToNextLevel: 100
+  maxHealth: 0
+  currentHealth: 0
+  attack: 0
+  defense: 0
+  attackSpeed: 0
+  range: 0
+  healthIV: 0
+  attackIV: 0
+  defenseIV: 0
+  speedIV: 0
