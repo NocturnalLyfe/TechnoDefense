@@ -9,17 +9,22 @@ public class TowerSpawner : MonoBehaviour
     [SerializeField] private Vector3 spawnPosition = Vector3.zero;
     [SerializeField] private int startingLevel = 1;
 
-    [Header("Default Build")]
-    [SerializeField] private TowerArchetype defaultArchetype = TowerArchetype.AntiVirus;
-
-    // Call from UI - basic spawn
-    public void SpawnNewTower()
+    public void SpawnAntiVirus()
     {
-        SpawnTowerWithBuild(defaultArchetype, startingLevel);
+        SpawnTowerWithBuild(TowerArchetype.AntiVirus);
+    }
+
+    public void SpawnAntiSpyware()
+    {
+        SpawnTowerWithBuild(TowerArchetype.AntiSpyware);
+    }
+    public void SpawnFirewall()
+    {
+        SpawnTowerWithBuild(TowerArchetype.Firewall);
     }
 
     // Call from UI with specific build
-    public void SpawnTowerWithBuild(TowerArchetype archetype, int level = 1)
+    public void SpawnTowerWithBuild(TowerArchetype archetype)
     {
         if (towerPrefab == null)
         {
@@ -29,11 +34,11 @@ public class TowerSpawner : MonoBehaviour
 
         GameObject newTower = Instantiate(towerPrefab, spawnPosition, Quaternion.identity, transform);
 
-        TowerStats stats = newTower.GetComponent<TowerStats>();
-        if (stats != null)
+        TowerInstance instance = newTower.GetComponent<TowerInstance>();
+        if (instance != null)
         {
-            stats.Initialize(archetype, level);
-            Debug.Log(stats.GetStatsSummary());
+            instance.Initialize(archetype, startingLevel);
+            Debug.Log(instance.GetStatsSummary());
         }
         else
         {

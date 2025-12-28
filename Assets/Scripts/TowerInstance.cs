@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-public class TowerStats : MonoBehaviour
+using UnityEngine.Rendering.Universal;
+public class TowerInstance : MonoBehaviour
 {
     [Header("Identity")]
     [SerializeField] private string towerName = "New Tower";
@@ -20,13 +20,6 @@ public class TowerStats : MonoBehaviour
     [SerializeField] private float baseAttackSpeed;
     [SerializeField] private float baseRange;
 
-    [Header("Attribute Points")]
-    [SerializeField] private int allocatedHealth = 0;
-    [SerializeField] private int allocatedAttack = 0;
-    [SerializeField] private int allocatedDefense = 0;
-    [SerializeField] private int allocatedSpeed = 0;
-    [SerializeField] private int allocatedRange = 0;
-
     [Header("Current Stats (Calculated)")]
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
@@ -34,6 +27,13 @@ public class TowerStats : MonoBehaviour
     [SerializeField] private int defense;
     [SerializeField] private float attackSpeed;
     [SerializeField] private float range;
+
+    [Header("Attribute Points")]
+    [SerializeField] private int allocatedHealth = 0;
+    [SerializeField] private int allocatedAttack = 0;
+    [SerializeField] private int allocatedDefense = 0;
+    [SerializeField] private int allocatedSpeed = 0;
+    [SerializeField] private int allocatedRange = 0;
 
     [Header("Modifiers & Upgrades")]
     [SerializeField] private List<TowerEnhancer> enhancements = new List<TowerEnhancer>();
@@ -52,17 +52,27 @@ public class TowerStats : MonoBehaviour
     public float AttackSpeed => attackSpeed;
     public float Range => range;
 
+    // Initialize Reference to Tower Components
+    private Light2D towerLight;
+    private SpriteRenderer spriteRenderer;
+    private PolygonCollider2D collider2d;
+
     // Initialize tower with chosen element and archetype
     public void Initialize(TowerArchetype chosenArchetype, int startLevel = 1)
     {
         archetype = chosenArchetype;
         level = startLevel;
 
+        // Get Components from Tower
+        towerLight = GetComponent<Light2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        collider2d = GetComponent<PolygonCollider2D>();
+
         // Set base stats based on archetype
-        SetArchetypeStats();
+        SetArchetype();
 
         // Give stat points for starting level
-        availableStatPoints = (startLevel - 1) * 3; // 3 points per level
+        availableStatPoints = (level - 1) * 3; // 3 points per level
 
         // Calculate all stats
         RecalculateStats();
@@ -76,32 +86,53 @@ public class TowerStats : MonoBehaviour
         Debug.Log($"Tower Created: {towerName} | Lvl {level} | {availableStatPoints} points available");
     }
 
-    private void SetArchetypeStats()
+    private void SetArchetype()
     {
         switch (archetype)
         {
             case TowerArchetype.AntiVirus:
-                baseMaxHealth = 50;
-                baseAttack = 25;
-                baseDefense = 5;
+                baseMaxHealth = 10;
+                baseAttack = 20;
+                baseDefense = 10;
                 baseAttackSpeed = 1.0f;
-                baseRange = 10.0f;
+                baseRange = 5.0f;
+
+                towerLight.color = Color.blue;
+                towerLight.intensity = 1.0f;
+
+                Sprite blocc = Resources.Load<Sprite>("Blocc");
+                spriteRenderer.sprite = blocc;
+                collider2d.CreateFromSprite(blocc);
                 break;
 
             case TowerArchetype.AntiSpyware:
-                baseMaxHealth = 40;
-                baseAttack = 10;
-                baseDefense = 8;
+                baseMaxHealth = 5;
+                baseAttack = 15;
+                baseDefense = 5;
                 baseAttackSpeed = 0.5f;
-                baseRange = 6.0f;
+                baseRange = 3.0f;
+
+                towerLight.color = Color.yellow;
+                towerLight.intensity = 0.5f;
+
+                Sprite circle = Resources.Load<Sprite>("Circle");
+                spriteRenderer.sprite = circle;
+                collider2d.CreateFromSprite(circle);
                 break;
 
             case TowerArchetype.Firewall:
-                baseMaxHealth = 60;
-                baseAttack = 20;
-                baseDefense = 30;
-                baseAttackSpeed = 3.0f;
-                baseRange = 12.0f;
+                baseMaxHealth = 15;
+                baseAttack = 8;
+                baseDefense = 15;
+                baseAttackSpeed = 2.0f;
+                baseRange = 8.0f;
+
+                towerLight.color = Color.red;
+                towerLight.intensity = 0.8f;
+
+                Sprite triangle = Resources.Load<Sprite>("Triangle");
+                spriteRenderer.sprite = triangle;
+                collider2d.CreateFromSprite(triangle);
                 break;
         }
     }
@@ -150,9 +181,9 @@ public class TowerStats : MonoBehaviour
     private void RecalculateStats()
     {
         // Base + Allocated + Level scaling
-        maxHealth = baseMaxHealth + (allocatedHealth * 5) + (level * 3);
-        attack = baseAttack + (allocatedAttack * 2) + (level * 1);
-        defense = baseDefense + (allocatedDefense * 2) + (level * 1);
+        maxHealth = baseMaxHealth + (allocatedHealth * 2) + (level * 3);
+        attack = baseAttack + (allocatedAttack * 1) + (level * 1);
+        defense = baseDefense + (allocatedDefense * 1) + (level * 1);
         attackSpeed = baseAttackSpeed + (allocatedSpeed * 0.05f);
         range = baseRange + (allocatedRange * 0.2f);
 
